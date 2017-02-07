@@ -320,7 +320,7 @@ uint32_t send_sd_cmd(enum sd_command cmd, uint32_t arg, uint32_t flag)
 	
 	// Checks if command is done
 	while (!(sdmmc->raw_int_stat & (1 << 2)));
-	sdmmc->raw_int_stat = (1 << 2);
+	sdmmc->raw_int_stat = (1 << 2) | (1 << 14);
 	
 	return sdmmc->raw_int_stat;
 }

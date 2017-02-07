@@ -1,0 +1,45 @@
+__build:
+
+# Sets target variables
+obj-y			:=
+subdir-y		:=
+extra-y			:=
+
+# Includes Makefile in current directory
+-include Makefile
+
+CUR_DIR			:=	$(shell pwd)/
+REL_PATH		:=	$(patsubst $(TOP_DIR)%, %, $(CUR_DIR))
+
+subdir-y		+=	$(patsubst %/, %, $(filter %/, $(obj-y)))
+
+subdir_objs		:=	$(foreach d, $(subdir-y), $(d)/built-in.o)
+
+cur_objs		:=	$(filter-out %/, $(obj-y))
+
+dep_files		:=	$(patsubst %.o, %.d, $(filter-out %/, $(obj-y)))
+dep_files		:=	$(wildcard $(dep_files))
+
+ifneq ($(dep_files),)
+	include $(dep_files)
+endif
+
+# Rules
+__build: $(subdir-y) built-in.o $(extra-y)
+
+$(subdir-y):
+	@make -C $@ -f $(TOP_DIR)Makefile.build
+
+built-in.o: $(cur_objs) $(subdir_objs)
+	@echo "[LD]    $(REL_PATH)$^ =>$(REL_PATH)built-in.o"
+	$(Q)$(LD) -r -o $@ $^
+	
+%.o: %.c
+	@echo "[CC]    $(REL_PATH)$<"
+	$(Q)$(CC) $(CFLAGS) $(INCLUDES) -I$(CUR_DIR) -MMD -c -o $@ $<
+	
+%.o: %.S
+	@echo "[CC]    $(REL_PATH)$<"
+	$(Q)$(CC) $(ASFLAGS) $(CFLAGS) $(INCLUDES) -I$(CUR_DIR) -D__COMPILING_ASM -MMD -c -o $@ $<
+
+.PHONY: $(subdir-y)

@@ -21,6 +21,7 @@ And the default value can be changed by modifying Board-specified header. Notici
 
 ### USB boot
 If SDFS boot fails, the bootloader will try USB boot. In that case, USB boot is similiar with that in ROM code (called *iROMBOOT*). You can learn more information from [S5P6818 Datasheet](http://wiki.friendlyarm.com/wiki/images/8/8b/SEC_S5P6818X_Users_Manual_preliminary_Ver_0.00.pdf). This bootloader will retry until USB boot is successful.
+In Version v1.1, the bootloader supports loading binary code without executing it when USB booting, just settings **launch_addr** to 0. In that case, DfuSe-like tool can be used to load Linux kernel first, then load U-boot and boot from U-boot to Linux. It will be convenient for kernel developers.
 
 ---
 
@@ -42,6 +43,18 @@ If debug information is needed, just using `DEBUG=1` and rebuilding the project.
 
 ### V
 Using `V=1` to output more compiling message.
+
+---
+
+## Change Logs
+
+Version: v1.1
+ --- Update time: 02/09/2017
+ --- Description: Supports loading binary code without executing it
+ 
+Version: v1.0
+ --- Update time: 02/07/2017
+ --- Description: First build
 
 ---
 

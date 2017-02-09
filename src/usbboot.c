@@ -6,6 +6,10 @@
  * --- Update time: 02/07/2017
  * --- Description: First build; code for USB boot
  *
+ * Version: v1.1
+ * --- Update time: 02/09/2017
+ * --- Description: Supports loading binary code without executing it
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -53,7 +57,8 @@ void (*do_usb_boot(void))(void)
 		}
 
 	if (usb_boot_info.success) {
-		reset_usb_otg_phy_and_link();
+		if (next_stage_addr)
+			reset_usb_otg_phy_and_link();
 		next_stage_addr = (void (*)(void))(uint64_t)usb_boot_info.launch_addr;
 		printf("Loading data successfully from USB OTG\n");
 		printf("Load Address = %#010x, Load Size = %d\n", usb_boot_info.load_addr, usb_boot_info.load_size);

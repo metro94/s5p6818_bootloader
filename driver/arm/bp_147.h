@@ -2,13 +2,9 @@
  * Copyright (C) 2017
  * Author: metro94 <flattiles@gmail.com>
  *
- * Version: v1.0
- * --- Update time: 02/07/2017
- * --- Description: First build; header for boot sequence
- *
  * Version: v1.2
  * --- Update time: 02/12/2017
- * --- Description: Adds configurations of TrustZone and GIC
+ * --- Description: Header for TZPC BP-147
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,37 +20,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __BOOT_H__
-#define __BOOT_H__
+#ifndef __BP_147_H__
+#define __BP_147_H__
 
 #include <common.h>
-#include <io.h>
-#include <std/printf.h>
-#include <std/debug.h>
 
-#include <led.h>
-#include <clksrc.h>
-#include <serial.h>
-#include <timer.h>
-#include <i2c.h>
-#include <pmic.h>
-#include <ddr3.h>
-#include <drex.h>
-#include <bus.h>
-#include <trustzone.h>
-#include <gic.h>
-#include <sdfsboot.h>
-#include <usbboot.h>
-
-extern uint32_t build_info;
-
-typedef void (*init_fn)(void);
-
-void boot_master_cpu(uint32_t) __attribute__ ((noreturn));
-void boot_slave_cpu (uint32_t) __attribute__ ((noreturn));
-
-void disp_compile_info(void);
-void wakeup_slave_cpu(void);
+struct bp_147_regs {
+	volatile uint32_t \
+		r0_size,			// 0x0
+		__rsvd0[(0x800 - 0x4) / 4];	// 0x4 ~ 0x7FC
+		
+	struct {
+		volatile uint32_t \
+			stat,				// 0x0
+			set,				// 0x4
+			clr;				// 0x8
+	} decode_protection[4];			// 0x800 ~ 0x82C
+	
+	volatile uint32_t \
+		__rsvd1[(0xFE0 - 0x830) / 4],	// 0x830 ~ 0xFDC
+		peripheral_id[4],		// 0xFE0 ~ 0xFEC
+		tzpc_id[4];			// 0xFF0 ~ 0xFFC
+};
 
 #endif
-

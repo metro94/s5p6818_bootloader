@@ -2,13 +2,9 @@
  * Copyright (C) 2017
  * Author: metro94 <flattiles@gmail.com>
  *
- * Version: v1.0
- * --- Update time: 02/07/2017
- * --- Description: First build; header for boot sequence
- *
  * Version: v1.2
  * --- Update time: 02/12/2017
- * --- Description: Adds configurations of TrustZone and GIC
+ * --- Description: Code for SoC TrustZone Controller
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,37 +20,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __BOOT_H__
-#define __BOOT_H__
+#include <nanopi_m3.h>
 
-#include <common.h>
-#include <io.h>
-#include <std/printf.h>
-#include <std/debug.h>
-
-#include <led.h>
-#include <clksrc.h>
-#include <serial.h>
-#include <timer.h>
-#include <i2c.h>
-#include <pmic.h>
-#include <ddr3.h>
-#include <drex.h>
-#include <bus.h>
 #include <trustzone.h>
-#include <gic.h>
-#include <sdfsboot.h>
-#include <usbboot.h>
 
-extern uint32_t build_info;
-
-typedef void (*init_fn)(void);
-
-void boot_master_cpu(uint32_t) __attribute__ ((noreturn));
-void boot_slave_cpu (uint32_t) __attribute__ ((noreturn));
-
-void disp_compile_info(void);
-void wakeup_slave_cpu(void);
-
-#endif
+void set_trustzone(void)
+{
+	int index, region;
+	
+	// Sets all Decode Protection to Non-secure
+	for (index = 0; index < TZPC_NUMBERS; ++index) {
+		tzpc[index].r0_size = 0x200;	// 2 MBytes
+		for (region = 0; region < 4; ++region) {
+			tzpc[index].decode_protection[region].clr = 0x00000000;
+			tzpc[index].decode_protection[region].set = 0xFFFFFFFF;
+		}
+	}
+	
+	// Sets TZASC disabled
+	index = tzasc->configuration & 0xF;
+	for (index = 1; index < 16; ++index) {	// Keeps RS[0] in default
+		tzasc->region[index].setup_high = 0;
+		tzasc->region[index].setup_low  = 0;
+		tzasc->region[index].attributes =
+			( 0xF << 28) |
+			(0xFF <<  8) |
+			(0x20 <<  1) |
+			(   0 <<  0);
+	}
+	tzasc->speculation_control = 0;
+}
 

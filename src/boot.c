@@ -6,6 +6,10 @@
  * --- Update time: 02/07/2017
  * --- Description: First build; code for boot sequence
  *
+ * Version: v1.2
+ * --- Update time: 02/12/2017
+ * --- Description: Adds configurations of TrustZone and GIC
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -39,6 +43,8 @@ static const init_fn init_seq[] = {
 	init_ddr3,
 	set_drex_qos,
 	init_bus,
+	set_trustzone,
+	set_gic,
 #ifdef PI_MEM_TEST
 	test_ddr3,
 #endif

@@ -519,6 +519,24 @@ enum BUS_ID {
 	BUS_ID_CPU_CLUSTER_1
 };
 
+// TrustZone settings
+
+#include <arm/tzc_380.h>
+
+static struct tzc_380_regs * const tzasc = (struct tzc_380_regs *)0xC00E5000;
+
+#include <arm/bp_147.h>
+
+#define TZPC_NUMBERS			7
+
+static struct bp_147_regs * const tzpc = (struct bp_147_regs *)0xC0301000;
+
+// GIC settings
+
+#include <arm/gic_400.h>
+
+static struct gic_400_regs * const gic_400 = (struct gic_400_regs *)0xC0008000;
+
 // GPIO settings
 
 #ifdef CONFIG_NX_GPIO

@@ -48,13 +48,17 @@ Using `V=1` to output more compiling message.
 
 ## Change Logs
 
-Version: v1.1
- --- Update time: 02/09/2017
- --- Description: Supports loading binary code without executing it
+Version: v1.2  
+ --- Update time: 02/12/2017  
+ --- Description: Adds configurations of TrustZone and GIC  
+
+Version: v1.1  
+ --- Update time: 02/09/2017  
+ --- Description: Supports loading binary code without executing it  
  
-Version: v1.0
- --- Update time: 02/07/2017
- --- Description: First build
+Version: v1.0  
+ --- Update time: 02/07/2017  
+ --- Description: First build  
 
 ---
 
@@ -64,7 +68,10 @@ Version: v1.0
 ├── config.mk
 ├── driver
 │   ├── arm
-│   │   └── cci_400.h
+│   │   ├── bp_147.h
+│   │   ├── cci_400.h
+│   │   ├── gic_400.h
+│   │   └── tzc_380.h
 │   ├── Makefile
 │   ├── nexell
 │   │   ├── Makefile
@@ -113,6 +120,7 @@ Version: v1.0
 │       ├── printf.h
 │       ├── string.c
 │       └── string.h
+├── LICENSE
 ├── Makefile
 ├── Makefile.build
 ├── README.md
@@ -130,6 +138,8 @@ Version: v1.0
 │   ├── ddr3.h
 │   ├── drex.c
 │   ├── drex.h
+│   ├── gic.c
+│   ├── gic.h
 │   ├── i2c.c
 │   ├── i2c.h
 │   ├── led.c
@@ -146,6 +156,8 @@ Version: v1.0
 │   ├── start_aarch64.S
 │   ├── timer.c
 │   ├── timer.h
+│   ├── trustzone.c
+│   ├── trustzone.h
 │   ├── usbboot.c
 │   └── usbboot.h
 └── tools

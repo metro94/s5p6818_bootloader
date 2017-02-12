@@ -21,7 +21,7 @@
 #
 
 MAJOR_VERSION		:=	1
-MINOR_VERSION		:=	1
+MINOR_VERSION		:=	2
 
 # Includes config from *.mk
 include config.mk

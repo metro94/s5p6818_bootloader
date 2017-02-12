@@ -3,5 +3,5 @@ obj-y	+=	boot.o
 obj-y	+=	clksrc.o clkgen.o
 obj-y	+=	led.o serial.o timer.o ddr3.o
 obj-y	+=	i2c.o pmic.o
-obj-y	+=	drex.o bus.o
+obj-y	+=	drex.o bus.o trustzone.o gic.o
 obj-y	+=	sdmmc.o sdfsboot.o usbboot.o

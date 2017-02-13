@@ -28,7 +28,7 @@ void set_gic(void)
 {
 	int index, ppi_index, ppi_cnt;
 	
-	// Sets CPU
+	// Sets Master CPU
 	gic_400->gicc.pmr = 0xFF;
 	gic_400->gicc.ctrl =
 		(0 << 10) |
@@ -44,23 +44,23 @@ void set_gic(void)
 		(1 <<  0);
 	for (index = 0; index < 8; ++index)
 		gic_400->gicd.ipriorityr[index] = 0;
-	gic_400->gicd.icenabler[0] = 0xFFFFFFFF;
-	gic_400->gicd.icpendr[0]   = 0xFFFFFFFF;
-	gic_400->gicd.igroupr[0]   = 0xFFFFFFFF;
+	gic_400->gicd.icenabler[0] = 0xFFFFFFFF;	// Disables the forwarding of corresponding interrupt
+	gic_400->gicd.icpendr[0]   = 0xFFFFFFFF;	// Inactives interrupts
+	gic_400->gicd.igroupr[0]   = 0xFFFFFFFF;	// Group 1
 	
-	// Sets Distributor
-	gic_400->gicd.ctrl =
+	// Sets All interrupts
+	gic_400->gicd.ctrl =	// Disables Group0 & Group1
 		(0 << 1) |
 		(0 << 0);
-	ppi_cnt = gic_400->gicd.typer & 0x1F;
+	ppi_cnt = gic_400->gicd.typer & 0x1F;	// Maximum number of interrupts
 	for (ppi_index = 1; ppi_index <= ppi_cnt; ++ppi_index) {
 		gic_400->gicd.icenabler[ppi_index] = 0xFFFFFFFF;
 		gic_400->gicd.icpendr[ppi_index]   = 0xFFFFFFFF;
 		for (index = 0; index < 8; ++index)
-			gic_400->gicd.ipriorityr[ppi_index * 8 + index] = 0x80808080;
+			gic_400->gicd.ipriorityr[ppi_index * 8 + index] = 0x80808080;	// Lowest priority
 		gic_400->gicd.igroupr[ppi_index]   = 0xFFFFFFFF;
 	}
-	gic_400->gicd.ctrl =
+	gic_400->gicd.ctrl =	// Enables Group0 & Group1
 		(1 << 1) |
 		(1 << 0);
 }
